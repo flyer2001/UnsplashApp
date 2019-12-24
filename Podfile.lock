@@ -1,16 +1,24 @@
 PODS:
   - Alamofire (4.9.1)
+  - Kanna (5.0.0)
+  - UnsplashPhotoPicker (1.1.0)
 
 DEPENDENCIES:
   - Alamofire
+  - Kanna
+  - UnsplashPhotoPicker (~> 1.1)
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - Kanna
+    - UnsplashPhotoPicker
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  Kanna: a32875df62975f8f4b871e933b4ea1a5c3b8be0f
+  UnsplashPhotoPicker: 9bbce3281825f0f61b98a53df84875e33723cd1d
 
-PODFILE CHECKSUM: c468454348dbbcd8eaf30f7abb20fc196a006315
+PODFILE CHECKSUM: 42cf010533edebd53635f459595261a3beef8ab8
 
 COCOAPODS: 1.8.4

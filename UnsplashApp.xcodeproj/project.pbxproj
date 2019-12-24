@@ -14,6 +14,7 @@
 		623F28C323B222B500567532 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 623F28C123B222B500567532 /* Main.storyboard */; };
 		623F28C523B222BB00567532 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 623F28C423B222BB00567532 /* Assets.xcassets */; };
 		623F28C823B222BB00567532 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 623F28C623B222BB00567532 /* LaunchScreen.storyboard */; };
+		623F28D523B22F4C00567532 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623F28D423B22F4C00567532 /* APIService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		623F28C423B222BB00567532 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		623F28C723B222BB00567532 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		623F28C923B222BB00567532 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		623F28D423B22F4C00567532 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		B7AB5237ABA23680166E888B /* Pods-UnsplashApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnsplashApp.debug.xcconfig"; path = "Target Support Files/Pods-UnsplashApp/Pods-UnsplashApp.debug.xcconfig"; sourceTree = "<group>"; };
 		B97F3A716DC44350A3ED681D /* Pods-UnsplashApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnsplashApp.release.xcconfig"; path = "Target Support Files/Pods-UnsplashApp/Pods-UnsplashApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				623F28D223B22C3E00567532 /* ViewControllers */,
+				623F28D323B22EC100567532 /* Data */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -96,6 +99,22 @@
 				623F28BF23B222B500567532 /* ViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		623F28D323B22EC100567532 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				629A9C4723B28BD3001D4727 /* Model */,
+				623F28D423B22F4C00567532 /* APIService.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		629A9C4723B28BD3001D4727 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		66D88F1490068AB81B72C778 /* Pods */ = {
@@ -232,6 +251,7 @@
 			files = (
 				623F28C023B222B500567532 /* ViewController.swift in Sources */,
 				623F28BC23B222B500567532 /* AppDelegate.swift in Sources */,
+				623F28D523B22F4C00567532 /* APIService.swift in Sources */,
 				623F28BE23B222B500567532 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
