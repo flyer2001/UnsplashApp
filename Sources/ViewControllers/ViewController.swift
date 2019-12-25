@@ -15,17 +15,21 @@ let sourceUnslpash = "https://source.unsplash.com/"
 let filterText = "Photo of the Day"
 
 class ViewController: UIViewController {
-    //var deletePrefix: String?
     
     @IBOutlet weak var photoOfDayImageView: UIImageView!
+    @IBOutlet weak var welcomeScreenTextLabel: UILabel!
+    @IBOutlet weak var welcomeView: UIView!
     
-    @IBOutlet weak var heightPhotoOfDayConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    getPhotoOfDay()
-    
+        super.viewDidLoad()
+        
+        welcomeScreenTextLabel.blink()
+        getPhotoOfDay()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(oneTap))
+        tap.numberOfTapsRequired = 1
+        welcomeView.addGestureRecognizer(tap)
     }
     
     func getPhotoOfDay(){
@@ -44,39 +48,25 @@ class ViewController: UIViewController {
         }
     }
     
+    @objc func oneTap() {
+        welcomeView.disappearAndRemovView()
+    }
+
+}
+
+
+//MARK: - UIView
+extension UIView{
+     func blink() {
+         self.alpha = 0.2
+         UIView.animate(withDuration: 1, delay: 0.0, options: [.curveLinear, .repeat, .autoreverse], animations: {self.alpha = 1.0}, completion: nil)
+     }
     
-//    func oldGetPhotoOfDay() {
-//        let sourceStringURL = "https://unsplash.com"
-//        if let sourceURL = URL(string: sourceStringURL){
-//            let URLTask = URLSession.shared.dataTask(with: sourceURL) {
-//                myData, response, error in
-//                guard error == nil else { return }
-//          
-//                let myHTMLString = String(data: myData!, encoding: String.Encoding.utf8)
-//
-//                if let doc = try? HTML(html: myHTMLString ?? "", encoding: .utf8) {
-//                
-//                    for link in doc.xpath("//a | //link") {
-//                        if let text = link.text  {
-//                            if text == "Photo of the Day"{
-//                                if let photoOfDayString = link["href"]{
-//                                    let resultPhotoOfDay = photoOfDayString.deletingPrefix("/photos/")
-//                                    let resultURLString = // "https://source.unsplash.com/" + resultPhotoOfDay
-//                                    self.photoOfDay.loadPhoto(resultURLString)
-//                                    
-//                                    
-//                                }
-//                                
-//                            }
-//                        }
-//                        
-//                    }
-//                }
-//        
-//            }
-//        URLTask.resume()
-//        }
-//    }
+    func disappearAndRemovView(){
+        UIView.self.animate(withDuration: 1, animations: {self.alpha = 0.0}, completion: {(value: Bool) in
+            self.removeFromSuperview()
+        })
+    }
 }
 
 //MARK: -UIIMageView
@@ -89,10 +79,36 @@ extension UIImageView {
             DispatchQueue.main.async {
                 if let data = try? Data(contentsOf: photoUrl!), let image = UIImage(data: data) {
                     self.image = image
+                    self.alpha = 0.0
+                    UIViewPropertyAnimator(duration: 2.0, curve: .easeIn, animations: {
+                        self.alpha = 1.0
+                    }).startAnimation()
+                }
                     
                 }
-            }
         }
+    }
+}
+
+
+extension UIImageView {
+    var contentClippingRect: CGRect {
+        guard let image = image else { return bounds }
+        guard contentMode == .scaleAspectFit else { return bounds }
+        guard image.size.width > 0 && image.size.height > 0 else { return bounds }
+
+        let scale: CGFloat
+        if image.size.width > image.size.height {
+            scale = bounds.width / image.size.width
+        } else {
+            scale = bounds.height / image.size.height
+        }
+
+        let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+        let x = (bounds.width - size.width) / 2.0
+        let y = (bounds.height - size.height) / 2.0
+
+        return CGRect(x: x, y: y, width: size.width, height: size.height)
     }
 }
 
