@@ -32,7 +32,7 @@
                     </view>
                     <connections>
                         <outlet property="heightPhotoOfDayConstraint" destination="j9S-gK-4Zm" id="2kY-sv-XHB"/>
-                        <outlet property="photoOfDay" destination="U8G-6R-rRt" id="dJ1-Bl-f5u"/>
+                        <outlet property="photoOfDayImageView" destination="U8G-6R-rRt" id="LYJ-3F-COR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
