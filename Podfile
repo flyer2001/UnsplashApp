@@ -7,7 +7,7 @@ target 'UnsplashApp' do
 
   # Pods for UnsplashApp
   pod 'Alamofire'
-  pod 'UnsplashPhotoPicker', '~> 1.1'
+  # pod "UnsplasherSDK"
   pod 'Kanna'
 
 end

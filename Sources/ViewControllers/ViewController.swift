@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import UnsplashPhotoPicker
-import Kanna
 
 let homePageUnsplash = "https://unsplash.com"
 let sourceUnslpash = "https://source.unsplash.com/"
@@ -21,6 +19,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var welcomeView: UIView!
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,30 +29,32 @@ class ViewController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(oneTap))
         tap.numberOfTapsRequired = 1
         welcomeView.addGestureRecognizer(tap)
+        
+        
     }
+    
+    
     
     func getPhotoOfDay(){
         APIService.shared.parsingStringFromHTML(url: URL(string: homePageUnsplash), filterText: filterText){
             [weak self](result: Swift.Result<[String], Error>) in
             do {
                 if let result = try result.get().first {
-                    let resultPhotoOfDay = result.deletingPrefix("/photos/")
-                    let resultURLString = sourceUnslpash + resultPhotoOfDay
-                    self?.photoOfDayImageView.loadPhoto(resultURLString)
-                }
-                
-            } catch (let error) {
+                    let idPhotoOfDay = result.deletingPrefix("/photos/")
+                    let resultURLString = sourceUnslpash + idPhotoOfDay
+                    self?.photoOfDayImageView.loadPhoto(resultURLString, isAnimation: true)
+                    }
+            } catch (let error)  {
                 print("\(error)")
             }
         }
     }
     
     @objc func oneTap() {
-        welcomeView.disappearAndRemovView()
+        performSegue(withIdentifier: "toMainSegue", sender: view)
+        //welcomeView.disappearAndRemovView()
     }
-
 }
-
 
 //MARK: - UIView
 extension UIView{
@@ -64,51 +65,34 @@ extension UIView{
     
     func disappearAndRemovView(){
         UIView.self.animate(withDuration: 1, animations: {self.alpha = 0.0}, completion: {(value: Bool) in
-            self.removeFromSuperview()
+            //self.removeFromSuperview()
         })
     }
 }
 
+
+
 //MARK: -UIIMageView
 
 extension UIImageView {
-    func loadPhoto(_ url: String) {
+    func loadPhoto(_ url: String, isAnimation: Bool) {
         let photoUrl = URL(string: url)
         let queue = DispatchQueue.global(qos: .utility)
         queue.async{
             DispatchQueue.main.async {
                 if let data = try? Data(contentsOf: photoUrl!), let image = UIImage(data: data) {
                     self.image = image
-                    self.alpha = 0.0
-                    UIViewPropertyAnimator(duration: 2.0, curve: .easeIn, animations: {
-                        self.alpha = 1.0
-                    }).startAnimation()
+                    if isAnimation {
+                        self.alpha = 0.0
+                        UIViewPropertyAnimator(duration: 1.0, curve: .easeIn, animations: {
+                            self.alpha = 1.0
+                        }).startAnimation()
+                    }
+
                 }
                     
                 }
         }
-    }
-}
-
-
-extension UIImageView {
-    var contentClippingRect: CGRect {
-        guard let image = image else { return bounds }
-        guard contentMode == .scaleAspectFit else { return bounds }
-        guard image.size.width > 0 && image.size.height > 0 else { return bounds }
-
-        let scale: CGFloat
-        if image.size.width > image.size.height {
-            scale = bounds.width / image.size.width
-        } else {
-            scale = bounds.height / image.size.height
-        }
-
-        let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
-        let x = (bounds.width - size.width) / 2.0
-        let y = (bounds.height - size.height) / 2.0
-
-        return CGRect(x: x, y: y, width: size.width, height: size.height)
     }
 }
 
@@ -119,3 +103,7 @@ extension String {
         return String(self.dropFirst(prefix.count))
     }
 }
+
+
+
+
