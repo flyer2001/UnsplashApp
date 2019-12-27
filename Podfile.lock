@@ -1,29 +1,20 @@
 PODS:
   - Alamofire (4.9.1)
   - Kanna (5.0.0)
-  - SwiftKeychainWrapper (3.0.1)
-  - UnsplasherSDK (1.2.1):
-    - Alamofire (~> 4.6)
-    - SwiftKeychainWrapper (~> 3.0.1)
 
 DEPENDENCIES:
   - Alamofire
   - Kanna
-  - UnsplasherSDK
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - Kanna
-    - SwiftKeychainWrapper
-    - UnsplasherSDK
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   Kanna: a32875df62975f8f4b871e933b4ea1a5c3b8be0f
-  SwiftKeychainWrapper: 38952a3636320ae61bad3513cadd870929de7a4a
-  UnsplasherSDK: 3bcebce1019a050aee5bac7a12748d75704d6235
 
-PODFILE CHECKSUM: a44ed055ac7be80675c71a43e6230dfe66e7ecec
+PODFILE CHECKSUM: bbe2eb061849c3e0a4f45acaffe3b692c64deda4
 
 COCOAPODS: 1.8.4

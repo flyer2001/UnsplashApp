@@ -10,20 +10,20 @@ import Foundation
 
 public struct Photo: Codable {
     
-    public let id: String
+    //public let id: String
     public let width: UInt32?
     public let height: UInt32?
     public let description: String?
-    public var hexColor: String?
+    //public var hexColor: String?
     //public let user: User?
     public let urls: PhotoURL?
-    public let links: Links?
-    public let categories: [Category]?
-    public var exif: Exif?
-    public let downloads: UInt32?
-    public let likes: UInt32?
-    public var likedByUser: Bool?
-    public var location: Location?
+    //public let links: Links?
+    //public let categories: [Category]?
+    //public var exif: Exif?
+    //public let downloads: UInt32?
+    //public let likes: UInt32?
+    //public var likedByUser: Bool?
+    //public var location: Location?
     //public let currentUserCollections: [Collection]?
     
 //    public var color: UIColor? {
@@ -34,20 +34,20 @@ public struct Photo: Codable {
 //    }
     
     private enum CodingKeys: String, CodingKey {
-        case id
+        //case id
         case width
         case height
         case description
         //case hexColor = "color"
         //case user
         case urls
-        case links
-        case categories
-        case exif
-        case downloads
-        case likes
-        case likedByUser = "liked_by_user"
-        case location
+        //case links
+        //case categories
+        //case exif
+        //case downloads
+        //case likes
+        //case likedByUser = "liked_by_user"
+        //case location
         //case currentUserCollections = "current_user_collections"
     }
     

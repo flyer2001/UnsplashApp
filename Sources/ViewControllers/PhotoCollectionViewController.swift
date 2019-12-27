@@ -1,87 +1,55 @@
 //
-//  SearchCollectionViewController.swift
+//  PhotoCollectionViewController.swift
 //  UnsplashApp
 //
-//  Created by Sergey Popyvanov on 26.12.2019.
+//  Created by Sergey Popyvanov on 27.12.2019.
 //  Copyright © 2019 Sergey Popyvanov. All rights reserved.
 //
 
 import UIKit
-import Alamofire
 
-let domainAPI = "https://api.unsplash.com"
-let searchPhotoUrlEndPoint = "/search/photos/"
-let collectionsUrlEndPoint = "/collections/"
-var params: Parameters = [
-    "query": "",
-    "page": "1",
-    "client_id": "5b5b279313339cd25a6da8948d6670fc10a4ebe987f57c05400503fe645657ce",
-    "per_page": "20",
-    "collections": ""
-]
 
-let sectionInsets = UIEdgeInsets(top: 10.0,
-left: 10.0,
-bottom: 10.0,
-right: 10.0)
 
-class SearchCollectionViewController: UICollectionViewController {
+class PhotoCollectionViewController: UICollectionViewController {
+
+    private let reuseIdentifier = "CellPhotoCollectionID"
+    var collectionsId = ""
     
-    @IBOutlet var searchCollectionView: UICollectionView!
-    @IBOutlet weak var searchTextField: UITextField!
-    
-    @IBOutlet weak var collectionsButton: UIButton!
-    
-    // MARK: - Properties
-    private let reuseIdentifier = "Cell"
-    
-    let searchDomain = URL(string: domainAPI)?.appendingPathComponent(searchPhotoUrlEndPoint)
-   
+    private var searches: [CollectionIdSearchResult] = []
+    private let itemsPerRow: CGFloat = 3
+    var collectionIDSearchDomain = URL(string: domainAPI)?.appendingPathComponent(collectionsUrlEndPoint)
     var page = 0
     
-    private var searches: [SearchResults] = []
-    private let itemsPerRow: CGFloat = 3
     
-
-    
-    @IBAction func collectionsButtonPress(_ sender: Any) {
-        performSegue(withIdentifier: "toCollectionsSegue", sender: sender)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print(collectionsId)
+        params["collections"] = collectionsId
+        collectionIDSearchDomain = collectionIDSearchDomain?.appendingPathComponent("/\(collectionsId)/photos/")
+        getSearchFromAPI()
     }
 
 }
 
 //// MARK: - Private
-private extension SearchCollectionViewController {
+private extension PhotoCollectionViewController {
     func photo(for indexPath: IndexPath) -> Photo? {
-        return searches[indexPath.section].searchResults?.photos?[indexPath.row]
+        return searches[indexPath.section].photos[indexPath.row]
     }
 }
 
-// MARK: - Text Field Delegate
-extension SearchCollectionViewController : UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        searches = []
-        params["collections"] = ""
-        page = 1
-        params["query"] = textField.text
-        getSearchFromAPI()
-
-        textField.text = nil
-        textField.resignFirstResponder()
-        return true
-  }
-}
-
 // MARK: - UICollectionViewDataSource
-extension SearchCollectionViewController {
+extension PhotoCollectionViewController {
     
     func getSearchFromAPI(){
-        APIService.shared.getObject(url: searchDomain, params: params){
-            [weak self] (result: Swift.Result<Search, Error>) in
+        APIService.shared.getObject(url: collectionIDSearchDomain, params: params){
+            [weak self] (result: Swift.Result<[Photo], Error>) in
             do {
                 let result = try result.get()
-                let searchResults = SearchResults(searchTerm: nil, searchResults: result, collections: [nil])
-                self?.searches.insert(searchResults, at: 0)
+                print(result.count)
+                print(self?.collectionIDSearchDomain)
+                let searchResults = CollectionIdSearchResult(photos: result)
+                self?.searches.append(searchResults)
                 self?.collectionView.reloadData()
             } catch(let error ) {
                 print("\(error)")
@@ -89,20 +57,19 @@ extension SearchCollectionViewController {
         }
     }
     
-    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return searches.count
     }
   
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return searches[section].searchResults?.photos?.count ?? 0
+        return searches[section].photos.count
     }
   
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath) as! PhotoCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath) as! CollectionIdCollectionViewCell
         let currentPhoto = photo(for: indexPath)
         cell.backgroundColor = .white
-        cell.photoImageView.loadPhoto(currentPhoto?.urls?.thumb.absoluteString ?? "", isAnimation: false)
+        cell.imageView.loadPhoto(currentPhoto?.urls?.thumb.absoluteString ?? "", isAnimation: false)
         return cell
     }
 
@@ -124,25 +91,30 @@ extension SearchCollectionViewController {
         params["page"] = "\(page)"
         getSearchFromAPI()
         
-        
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+
+        performSegue(withIdentifier: "collectionPhotoIdDetailsSegue", sender: cell)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destinationVC: DetailsViewController = segue.destination as? DetailsViewController {
             if let index = collectionView.indexPathsForSelectedItems?.first {
-                if let currentPhoto = searches[index.section].searchResults?.photos?[index.row]{
-                    destinationVC.sizeOfPhoto = "Size: \(currentPhoto.height ?? 0) x \(currentPhoto.width ?? 0)"
-                    destinationVC.desc = "Description: \(currentPhoto.description ?? "")"
-                    destinationVC.rawUrlString = currentPhoto.urls?.raw.absoluteString ?? ""
-                    destinationVC.thumbUrlString = currentPhoto.urls?.thumb.absoluteString ?? ""
-                }
+                let currentPhoto = searches[index.section].photos[index.row]
+                destinationVC.sizeOfPhoto = "Size: \(currentPhoto.height ?? 0) x \(currentPhoto.width ?? 0)"
+                destinationVC.desc = "Description: \(currentPhoto.description ?? "")"
+                destinationVC.rawUrlString = currentPhoto.urls?.raw.absoluteString ?? ""
+                destinationVC.thumbUrlString = currentPhoto.urls?.thumb.absoluteString ?? ""
+                
             }
         }
     }
 
 }
 
-extension SearchCollectionViewController : UICollectionViewDelegateFlowLayout {
+extension PhotoCollectionViewController : UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -52,7 +52,6 @@ class ViewController: UIViewController {
     
     @objc func oneTap() {
         performSegue(withIdentifier: "toMainSegue", sender: view)
-        //welcomeView.disappearAndRemovView()
     }
 }
 
@@ -65,7 +64,6 @@ extension UIView{
     
     func disappearAndRemovView(){
         UIView.self.animate(withDuration: 1, animations: {self.alpha = 0.0}, completion: {(value: Bool) in
-            //self.removeFromSuperview()
         })
     }
 }
