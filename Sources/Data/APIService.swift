@@ -87,39 +87,5 @@ final public class APIService {
         }
     
     }
-  
-        
-//        if let sourceURL = URL(string: urlString){
-//
-//
-//            let URLTask = URLSession.shared.dataTask(with: sourceURL) {
-//                myData, response, error in
-//                guard error == nil else { return }
-//
-//                let myHTMLString = String(data: myData!, encoding: String.Encoding.utf8)
-//
-//                if let doc = try? HTML(html: myHTMLString ?? "", encoding: .utf8) {
-//
-//                    for link in doc.xpath("//a | //link") {
-//                        if let text = link.text  {
-//                            if text == "Photo of the Day"{
-//                                if let photoOfDayString = link["href"]{
-//                                    let resultPhotoOfDay = photoOfDayString.deletingPrefix("/photos/")
-//                                    let resultURLString = "https://source.unsplash.com/" + resultPhotoOfDay
-//
-//
-//
-//                                }
-//
-//                            }
-//                        }
-//
-//                    }
-//                }
-//
-//            }
-//        URLTask.resume()
-//        }
-//    }
     
 }

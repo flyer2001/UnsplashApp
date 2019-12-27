@@ -15,7 +15,6 @@ class DetailsViewController: UIViewController {
     var rawUrlString = ""
     var thumbUrlString = ""
     
-    
     @IBOutlet weak var sizeLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var rawUrlTextField: UITextField!

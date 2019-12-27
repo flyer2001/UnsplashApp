@@ -8,30 +8,25 @@
 
 import UIKit
 
-
-
 class PhotoCollectionViewController: UICollectionViewController {
 
     private let reuseIdentifier = "CellPhotoCollectionID"
     var collectionsId = ""
     
     private var searches: [CollectionIdSearchResult] = []
-    private let itemsPerRow: CGFloat = 3
-    var collectionIDSearchDomain = URL(string: domainAPI)?.appendingPathComponent(collectionsUrlEndPoint)
-    var page = 0
-    
+    private var collectionIDSearchDomain = URL(string: domainAPI)?.appendingPathComponent(collectionsUrlEndPoint)
+    private var page = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(collectionsId)
+        itemsPerRow = 3
         params["collections"] = collectionsId
         collectionIDSearchDomain = collectionIDSearchDomain?.appendingPathComponent("/\(collectionsId)/photos/")
         getSearchFromAPI()
     }
-
 }
 
-//// MARK: - Private
+// MARK: - Applied methods
 private extension PhotoCollectionViewController {
     func photo(for indexPath: IndexPath) -> Photo? {
         return searches[indexPath.section].photos[indexPath.row]
@@ -46,8 +41,6 @@ extension PhotoCollectionViewController {
             [weak self] (result: Swift.Result<[Photo], Error>) in
             do {
                 let result = try result.get()
-                print(result.count)
-                print(self?.collectionIDSearchDomain)
                 let searchResults = CollectionIdSearchResult(photos: result)
                 self?.searches.append(searchResults)
                 self?.collectionView.reloadData()
@@ -74,14 +67,13 @@ extension PhotoCollectionViewController {
     }
 
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let contentOffset = scrollView.contentOffset.y;
-        let contentHeight = scrollView.contentSize.height;
-        let diffHeight = contentHeight - contentOffset;
-        let frameHeight = scrollView.bounds.size.height;
-        let pullHeight  = abs(diffHeight - frameHeight);
-        //print("pullHeight:\(pullHeight)");
+        let contentOffset = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let diffHeight = contentHeight - contentOffset
+        let frameHeight = scrollView.bounds.size.height
+        let pullHeight  = abs(diffHeight - frameHeight)
         if pullHeight < 0.2 {
-            print("load more trigger")
+            print("load more..")
             Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateNextSet), userInfo: nil, repeats: false)
         }
     }
@@ -90,12 +82,10 @@ extension PhotoCollectionViewController {
         page += 1
         params["page"] = "\(page)"
         getSearchFromAPI()
-        
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-
         performSegue(withIdentifier: "collectionPhotoIdDetailsSegue", sender: cell)
     }
     
@@ -107,32 +97,7 @@ extension PhotoCollectionViewController {
                 destinationVC.desc = "Description: \(currentPhoto.description ?? "")"
                 destinationVC.rawUrlString = currentPhoto.urls?.raw.absoluteString ?? ""
                 destinationVC.thumbUrlString = currentPhoto.urls?.thumb.absoluteString ?? ""
-                
             }
         }
     }
-
-}
-
-extension PhotoCollectionViewController : UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView,
-                      layout collectionViewLayout: UICollectionViewLayout,
-                      sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
-    let availableWidth = view.frame.width - paddingSpace
-    let widthPerItem = availableWidth / itemsPerRow
-    return CGSize(width: widthPerItem, height: widthPerItem)
-  }
-  
-  func collectionView(_ collectionView: UICollectionView,
-                      layout collectionViewLayout: UICollectionViewLayout,
-                      insetForSectionAt section: Int) -> UIEdgeInsets {
-    return sectionInsets
-  }
-  
-  func collectionView(_ collectionView: UICollectionView,
-                      layout collectionViewLayout: UICollectionViewLayout,
-                      minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return sectionInsets.left
-  }
 }

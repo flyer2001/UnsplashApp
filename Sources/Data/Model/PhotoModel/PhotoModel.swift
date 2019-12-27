@@ -1,5 +1,5 @@
 //
-//  CollectionsModel.swift
+//  PhotosModel.swift
 //  UnsplashApp
 //
 //  Created by Sergey Popyvanov on 26.12.2019.
@@ -8,18 +8,20 @@
 
 import Foundation
 
-public struct Collection: Codable {
+public struct Photo: Codable {
     
-    public let id: UInt32
-    public var title: String
-    public let coverPhoto: Photo?
+    public let width: UInt32?
+    public let height: UInt32?
+    public let description: String?
     public let urls: PhotoURL?
     
     private enum CodingKeys: String, CodingKey {
-        case id
-        case title
-        case coverPhoto = "cover_photo"
+        case width
+        case height
+        case description
         case urls
     }
-    
+
 }
+
+

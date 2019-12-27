@@ -18,22 +18,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var welcomeScreenTextLabel: UILabel!
     @IBOutlet weak var welcomeView: UIView!
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         welcomeScreenTextLabel.blink()
         getPhotoOfDay()
-        
         let tap = UITapGestureRecognizer(target: self, action: #selector(oneTap))
         tap.numberOfTapsRequired = 1
         welcomeView.addGestureRecognizer(tap)
-        
-        
     }
-    
-    
     
     func getPhotoOfDay(){
         APIService.shared.parsingStringFromHTML(url: URL(string: homePageUnsplash), filterText: filterText){
@@ -69,7 +62,6 @@ extension UIView{
 }
 
 
-
 //MARK: -UIIMageView
 
 extension UIImageView {
@@ -89,7 +81,7 @@ extension UIImageView {
 
                 }
                     
-                }
+            }
         }
     }
 }

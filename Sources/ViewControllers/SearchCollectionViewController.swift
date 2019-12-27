@@ -24,6 +24,7 @@ let sectionInsets = UIEdgeInsets(top: 10.0,
 left: 10.0,
 bottom: 10.0,
 right: 10.0)
+var itemsPerRow: CGFloat = 3
 
 class SearchCollectionViewController: UICollectionViewController {
     
@@ -34,23 +35,17 @@ class SearchCollectionViewController: UICollectionViewController {
     
     // MARK: - Properties
     private let reuseIdentifier = "Cell"
-    
     let searchDomain = URL(string: domainAPI)?.appendingPathComponent(searchPhotoUrlEndPoint)
-   
-    var page = 0
-    
+    private var page = 0
     private var searches: [SearchResults] = []
-    private let itemsPerRow: CGFloat = 3
-    
 
-    
     @IBAction func collectionsButtonPress(_ sender: Any) {
         performSegue(withIdentifier: "toCollectionsSegue", sender: sender)
     }
 
 }
 
-//// MARK: - Private
+// MARK: - Applied methods
 private extension SearchCollectionViewController {
     func photo(for indexPath: IndexPath) -> Photo? {
         return searches[indexPath.section].searchResults?.photos?[indexPath.row]
@@ -62,8 +57,10 @@ extension SearchCollectionViewController : UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         searches = []
         params["collections"] = ""
+        itemsPerRow = 3
         page = 1
         params["query"] = textField.text
+        
         getSearchFromAPI()
 
         textField.text = nil
@@ -89,7 +86,6 @@ extension SearchCollectionViewController {
         }
     }
     
-    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return searches.count
     }
@@ -107,12 +103,11 @@ extension SearchCollectionViewController {
     }
 
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let contentOffset = scrollView.contentOffset.y;
-        let contentHeight = scrollView.contentSize.height;
-        let diffHeight = contentHeight - contentOffset;
-        let frameHeight = scrollView.bounds.size.height;
-        let pullHeight  = abs(diffHeight - frameHeight);
-        //print("pullHeight:\(pullHeight)");
+        let contentOffset = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let diffHeight = contentHeight - contentOffset
+        let frameHeight = scrollView.bounds.size.height
+        let pullHeight  = abs(diffHeight - frameHeight)
         if pullHeight < 0.2 {
             print("load more trigger")
             Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateNextSet), userInfo: nil, repeats: false)
@@ -123,8 +118,6 @@ extension SearchCollectionViewController {
         page += 1
         params["page"] = "\(page)"
         getSearchFromAPI()
-        
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -142,25 +135,21 @@ extension SearchCollectionViewController {
 
 }
 
-extension SearchCollectionViewController : UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView,
-                      layout collectionViewLayout: UICollectionViewLayout,
-                      sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
-    let availableWidth = view.frame.width - paddingSpace
-    let widthPerItem = availableWidth / itemsPerRow
-    return CGSize(width: widthPerItem, height: widthPerItem)
-  }
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension UICollectionViewController : UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
+        let availableWidth = view.frame.width - paddingSpace
+        let widthPerItem = availableWidth / itemsPerRow
+        return CGSize(width: widthPerItem, height: widthPerItem)
+    }
   
-  func collectionView(_ collectionView: UICollectionView,
-                      layout collectionViewLayout: UICollectionViewLayout,
-                      insetForSectionAt section: Int) -> UIEdgeInsets {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
     return sectionInsets
-  }
+    }
   
-  func collectionView(_ collectionView: UICollectionView,
-                      layout collectionViewLayout: UICollectionViewLayout,
-                      minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     return sectionInsets.left
-  }
+    }
 }
