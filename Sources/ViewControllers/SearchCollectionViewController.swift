@@ -109,7 +109,6 @@ extension SearchCollectionViewController {
         let frameHeight = scrollView.bounds.size.height
         let pullHeight  = abs(diffHeight - frameHeight)
         if pullHeight < 0.2 {
-            print("load more trigger")
             Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateNextSet), userInfo: nil, repeats: false)
         }
     }
